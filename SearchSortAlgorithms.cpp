@@ -10,15 +10,18 @@ void MergeSort(int array[], int size); // sub arrays, recursion
 void Merge(int leftSide[], int rightSide[], int array[], int size);
 
 //Searching Algorithms
+int LinearSearch(int array[], int size, int search, bool done);
 
-
-// ui and outputs
-void ShowResult(int array[], int size);
+//UI and outputs
+void SortResult(int array[], int size);
+void SearchResult(int search);
+bool ItemNotFound(bool done, bool isFound = true);
+int SearchPrompt(int search);
 
 int main(){
 	int array[10] = {1,9,2,8,3,7,4,6,10,5};
 	int size = 	sizeof(array) / sizeof(array[0]); // calculates the size of the array
-	int choice;
+	int choice,search;
 	bool done = false;
 	
 	
@@ -47,10 +50,27 @@ int main(){
 		}
 	}
 	
-	ShowResult(array,size);
+	SortResult(array,size);
+	done = false;
+	
+	while(!done){
+	cout << "Choose your Searching Algorithms: \n";
+	cout << "1. Linear Search\n";
+	cout << "Your Answer: ";
+	cin >> choice;
+	cout << endl;
+		switch(choice){
+			case 1: search = LinearSearch(array,size,search,done); done = ItemNotFound(done);
+			default: cout << "Invalid Choice!"; cin.clear();fflush(stdin);
+		}		
+	}
+	
+	SearchResult(search);
 	
 	return 0;
 }
+
+//functions for Sorting Algorithms
 
 void BubbleSort(int array[], int size){
 	for(int i = 0; i < size - 1; i++){ // outer loop
@@ -98,7 +118,6 @@ void MergeSort(int array[], int size){
 	}
 	
 	int middle = size/2;
-	cout << middle << endl;
 	//sub arrays based on the size 
 		int *leftSide = new int[middle];
 		int *rightSide = new int[size - middle];
@@ -116,6 +135,10 @@ void MergeSort(int array[], int size){
     MergeSort(rightSide, size - middle);
     //merging
 	Merge(leftSide, rightSide, array, size);
+
+	//deletes the temp arrays and prevents memory leaks
+	delete[] leftSide;
+	delete[] rightSide;
 }
 
 void Merge(int leftSide[], int rightSide[], int array[], int size){
@@ -149,11 +172,45 @@ void Merge(int leftSide[], int rightSide[], int array[], int size){
 	
 }
 
-void ShowResult(int array[], int size){
+//functions for Searching Algorithms
+int LinearSearch(int array[], int size, int search, bool done){
+	bool isFound = true;
+	search = SearchPrompt(search);
+	
+	for(int i = 0; i < size; i++){
+		if(array[i] == search){
+			search = i; // returns the search index
+			return search;	
+		}
+	}
+	
+	isFound = false;
+	ItemNotFound(done, isFound);
+}
+
+//functions for UI and Outputs
+void SortResult(int array[], int size){
 	cout << "-------------Final Solution---------------\n\n";
 	for(int i = 0; i < size; i++){
 		cout << array[i] << " ";
 	}
-	cout << endl;
+	cout << endl << endl;
 }
 
+void SearchResult(int search){
+	cout << "Item Found! The Item Searched is in Index " << search << endl;
+}
+
+bool ItemNotFound(bool done, bool isFound){
+	if(isFound == false){
+		cout << "Item Not Found! Try Again.\n";
+	}
+	return !done;
+}
+
+int SearchPrompt(int search){
+	cout << "Enter Number you want to find: ";
+	cin >> search;
+	
+	return search;
+}
