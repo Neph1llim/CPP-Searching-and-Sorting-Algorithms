@@ -11,6 +11,7 @@ void Merge(int leftSide[], int rightSide[], int array[], int size);
 
 //Searching Algorithms
 int LinearSearch(int array[], int size, int search, bool done);
+int BinarySearch(int array[], int size, int search, bool done);
 
 //UI and outputs
 void SortResult(int array[], int size);
@@ -22,7 +23,7 @@ void SyntaxError();
 int main(){
 	int array[10] = {1,9,2,8,3,7,4,6,10,5};
 	int size = 	sizeof(array) / sizeof(array[0]); // calculates the size of the array
-	int choice,search;
+	int choice,search,result;
 	bool done = false;
 	
 	
@@ -57,16 +58,26 @@ int main(){
 	while(!done){
 	cout << "Choose your Searching Algorithms: \n";
 	cout << "1. Linear Search\n";
+	cout << "2. Binary Search\n";
 	cout << "Your Answer: ";
 	cin >> choice;
 	cout << endl;
 		switch(choice){
-			case 1: search = LinearSearch(array,size,search,done); done = ItemNotFound(done); break; 
+			case 1: 
+			search = SearchPrompt(search);
+			result = LinearSearch(array,size,search,done);
+			done = ItemNotFound(done);
+			break;
+			case 2:
+			search = SearchPrompt(search);
+			result = BinarySearch(array,size,search,done);
+			done = ItemNotFound(done);
+			break; 
 			default: SyntaxError();
 		}		
 	}
 	
-	SearchResult(search);
+	SearchResult(result);
 	
 	return 0;
 }
@@ -113,8 +124,8 @@ void SelectionSort(int array[], int size){
 }
 
 void MergeSort(int array[], int size){
-	
-	if(size <= 1){ // base case
+	// base case
+	if(size <= 1){ 
 		return;
 	}
 	
@@ -175,12 +186,31 @@ void Merge(int leftSide[], int rightSide[], int array[], int size){
 
 //functions for Searching Algorithms
 int LinearSearch(int array[], int size, int search, bool done){
-	bool isFound = true;
-	search = SearchPrompt(search);
-	
+	bool isFound = true;	
 	for(int i = 0; i < size; i++){
 		if(array[i] == search){
 			search = i; // returns the search index
+			return search;	
+		}
+	}
+	
+	isFound = false;
+	ItemNotFound(done, isFound);
+}
+
+int BinarySearch(int array[], int size, int search, bool done){
+	bool isFound = true;
+	
+	int low, middle, high = size;
+	
+	while(low <= high){
+		middle = (low + high) / 2;
+		if(search < array[middle]){
+			high = middle - 1;
+		}else if(search > array[middle]){
+			low = middle + 1;
+		}else{
+			search = middle; // returns the search index
 			return search;	
 		}
 	}
