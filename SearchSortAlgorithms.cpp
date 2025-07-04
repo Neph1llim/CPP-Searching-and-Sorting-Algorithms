@@ -17,6 +17,7 @@ void SortResult(int array[], int size);
 void SearchResult(int search);
 bool ItemNotFound(bool done, bool isFound = true);
 int SearchPrompt(int search);
+void SyntaxError();
 
 int main(){
 	int array[10] = {1,9,2,8,3,7,4,6,10,5};
@@ -46,7 +47,7 @@ int main(){
 			case 2: InsertionSort(array, size); done = true; break;
 			case 3: SelectionSort(array, size); done = true; break;
 			case 4: MergeSort(array, size); done = true; break;
-			default: cout << "Invalid Choice!"; cin.clear();fflush(stdin);
+			default: SyntaxError();
 		}
 	}
 	
@@ -60,8 +61,8 @@ int main(){
 	cin >> choice;
 	cout << endl;
 		switch(choice){
-			case 1: search = LinearSearch(array,size,search,done); done = ItemNotFound(done);
-			default: cout << "Invalid Choice!"; cin.clear();fflush(stdin);
+			case 1: search = LinearSearch(array,size,search,done); done = ItemNotFound(done); break; 
+			default: SyntaxError();
 		}		
 	}
 	
@@ -203,7 +204,8 @@ void SearchResult(int search){
 
 bool ItemNotFound(bool done, bool isFound){
 	if(isFound == false){
-		cout << "Item Not Found! Try Again.\n";
+		cout << "Item Not Found! Try Again.\n\n";
+		return done;
 	}
 	return !done;
 }
@@ -214,3 +216,9 @@ int SearchPrompt(int search){
 	
 	return search;
 }
+
+void SyntaxError(){
+	cout << "Invalid Choice!"; 
+	cin.clear();
+	fflush(stdin);
+};
