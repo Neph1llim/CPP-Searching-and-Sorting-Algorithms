@@ -1,5 +1,5 @@
 # CPP-Searching-and-Sorting-Algorithms
-This is a programming project I am currently working on regarding Search and Sorting Algorithms, Mostly self-taught and does not use AI.
+This is a programming project I am currently working on regarding Search and Sorting Algorithms, Mostly self-taught and does not use AI. I Find Illustration and demo then figure out the code myself
 
 ---
 
@@ -11,7 +11,6 @@ I'm done creating some Sorting Algorithms, which include:
 
 I' done creating some Searching Algorithms, which include:
   1. Linear Search
-  2.  
  
 ---
 
@@ -23,4 +22,4 @@ I'm trying to learn:
 
 ---
 
-I'm currently working on the Binary Search Algorithm
+I'm currently working on the Binary, Interpolation, Jump, Exponential and Fibonacci Search Algorithm,
