@@ -10,13 +10,13 @@ void MergeSort(int array[], int size); // sub arrays, recursion
 void Merge(int leftSide[], int rightSide[], int array[], int size);
 
 //Searching Algorithms
-int LinearSearch(int array[], int size, int search, bool done);
-int BinarySearch(int array[], int size, int search, bool done);
+int LinearSearch(int array[], int size, int search, bool &done);
+int BinarySearch(int array[], int size, int search, bool &done);
 
 //UI and outputs
 void SortResult(int array[], int size);
 void SearchResult(int search);
-bool ItemNotFound(bool done, bool isFound = true);
+void isFound(bool done);
 int SearchPrompt(int search);
 void SyntaxError();
 
@@ -34,7 +34,6 @@ int main(){
 	
 	
 	while(!done){
-		
 	cout << "\n\nChoose your Sorting Algorithm:\n";
 	cout << "1. Bubble Sort\n";
 	cout << "2. Insertion Sort\n";
@@ -53,9 +52,9 @@ int main(){
 	}
 	
 	SortResult(array,size);
-	done = false;
 	
-	while(!done){
+	do{
+	done = false;
 	cout << "Choose your Searching Algorithms: \n";
 	cout << "1. Linear Search\n";
 	cout << "2. Binary Search\n";
@@ -66,16 +65,16 @@ int main(){
 			case 1: 
 			search = SearchPrompt(search);
 			result = LinearSearch(array,size,search,done);
-			done = ItemNotFound(done);
+			isFound(done);
 			break;
 			case 2:
 			search = SearchPrompt(search);
 			result = BinarySearch(array,size,search,done);
-			done = ItemNotFound(done);
+			isFound(done);
 			break; 
 			default: SyntaxError();
 		}		
-	}
+	}while(!done);
 	
 	SearchResult(result);
 	
@@ -185,38 +184,34 @@ void Merge(int leftSide[], int rightSide[], int array[], int size){
 }
 
 //functions for Searching Algorithms
-int LinearSearch(int array[], int size, int search, bool done){
-	bool isFound = true;	
-	for(int i = 0; i < size; i++){
+int LinearSearch(int array[], int size, int search, bool &done){
+	for(int i = 0; i < size-1; i++){
 		if(array[i] == search){
 			search = i; // returns the search index
+			done = true;
 			return search;	
 		}
 	}
-	
-	isFound = false;
-	ItemNotFound(done, isFound);
+	done = false;
 }
 
-int BinarySearch(int array[], int size, int search, bool done){
-	bool isFound = true;
+int BinarySearch(int array[], int size, int search, bool &done){
 	
-	int low, middle, high = size;
+	int low, middle;
 	
-	while(low <= high){
-		middle = (low + high) / 2;
+	while(low <= size){
+		middle = (low + size) / 2;
 		if(search < array[middle]){
-			high = middle - 1;
+			size = middle - 1;
 		}else if(search > array[middle]){
 			low = middle + 1;
 		}else{
 			search = middle; // returns the search index
+			done = true;
 			return search;	
 		}
 	}
-	
-	isFound = false;
-	ItemNotFound(done, isFound);
+	done = false;
 }
 
 //functions for UI and Outputs
@@ -232,12 +227,10 @@ void SearchResult(int search){
 	cout << "Item Found! The Item Searched is in Index " << search << endl;
 }
 
-bool ItemNotFound(bool done, bool isFound){
-	if(isFound == false){
+void isFound(bool done){
+	if(done == false){
 		cout << "Item Not Found! Try Again.\n\n";
-		return done;
 	}
-	return !done;
 }
 
 int SearchPrompt(int search){
