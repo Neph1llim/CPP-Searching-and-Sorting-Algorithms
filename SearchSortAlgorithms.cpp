@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
@@ -10,8 +11,10 @@ void MergeSort(int array[], int size); // sub arrays, recursion
 void Merge(int leftSide[], int rightSide[], int array[], int size);
 
 //Searching Algorithms
-int LinearSearch(int array[], int size, int search, bool &done);
+int LinearSearch(int array[], int size, int search, bool &done, int prev = 0);
 int BinarySearch(int array[], int size, int search, bool &done);
+int InterpolationSearch(int array[], int size, int search, bool &done);
+int JumpSearch(int array[], int size, int search, bool &done);
 
 //UI and outputs
 void SortResult(int array[], int size);
@@ -58,20 +61,32 @@ int main(){
 	cout << "Choose your Searching Algorithms: \n";
 	cout << "1. Linear Search\n";
 	cout << "2. Binary Search\n";
+	cout << "3. Interpolation Search\n";
+	cout << "4. Jump Search\n";
 	cout << "Your Answer: ";
 	cin >> choice;
 	cout << endl;
 		switch(choice){
 			case 1: 
-			search = SearchPrompt(search);
-			result = LinearSearch(array,size,search,done);
-			isFound(done);
-			break;
+				search = SearchPrompt(search);
+				result = LinearSearch(array,size,search,done);
+				isFound(done);
+				break;
 			case 2:
-			search = SearchPrompt(search);
-			result = BinarySearch(array,size,search,done);
-			isFound(done);
-			break; 
+				search = SearchPrompt(search);
+				result = BinarySearch(array,size,search,done);
+				isFound(done);
+				break; 
+			case 3:
+				search = SearchPrompt(search);
+				result = InterpolationSearch(array,size,search,done);
+				isFound(done);
+				break; 
+			case 4:
+				search = SearchPrompt(search);
+				result = JumpSearch(array,size,search,done);
+				isFound(done);
+				break; 
 			default: SyntaxError();
 		}		
 	}while(!done);
@@ -184,8 +199,8 @@ void Merge(int leftSide[], int rightSide[], int array[], int size){
 }
 
 //functions for Searching Algorithms
-int LinearSearch(int array[], int size, int search, bool &done){
-	for(int i = 0; i < size-1; i++){
+int LinearSearch(int array[], int size, int search, bool &done, int prev){
+	for(int i = prev; i < size; i++){
 		if(array[i] == search){
 			search = i; // returns the search index
 			done = true;
@@ -196,7 +211,6 @@ int LinearSearch(int array[], int size, int search, bool &done){
 }
 
 int BinarySearch(int array[], int size, int search, bool &done){
-	
 	int low, middle;
 	
 	while(low <= size){
@@ -211,6 +225,50 @@ int BinarySearch(int array[], int size, int search, bool &done){
 			return search;	
 		}
 	}
+	done = false;
+}
+
+int InterpolationSearch(int array[],int size, int search, bool &done){
+	int low,middle;
+	
+	while(search >= array[low] && search <= array[size] && low <= size){
+		
+		//formula for interpolation
+		middle = low + (size - low) * (search - array[low] / array[size] - array[low]);
+		
+		if(array[middle] == search){
+			search = middle; // returns the search index
+			done = true;
+			return search;
+		}else if(array[middle] < search){
+			low = middle;
+		}else{
+			size = middle;
+		}
+	}
+	
+	done = false;
+}
+
+int JumpSearch(int array[], int size, int search, bool &done){
+	int jump = sqrt(size);
+	int prev, next;
+	
+	while(search <= array[size] && prev < size){
+		cout << prev;
+		if(array[next] >= search){
+			break;
+		}else{
+			prev = next;
+			next += jump;
+		}
+	}
+	//Linear Search after jump
+	while(search <= array[size]){
+		search = LinearSearch(array,size,search,done,prev);
+		return search;
+	}
+	
 	done = false;
 }
 
