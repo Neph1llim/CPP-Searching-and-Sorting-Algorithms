@@ -14,6 +14,8 @@ I'm done creating some Sorting Algorithms, which include:
 I' done creating some Searching Algorithms, which include:
   1. Linear Search
   2. Binary Search
+  3. Interpolation Search
+  4. Jumps Search
 
 ---
 
@@ -28,4 +30,4 @@ I'm trying to learn:
 
 ---
 
-I'm currently working on the Interpolation, Jump, Exponential and Fibonacci Search Algorithm.
+I'm currently working on the Exponential and Fibonacci Search Algorithm.
