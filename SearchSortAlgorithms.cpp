@@ -12,9 +12,11 @@ void Merge(int leftSide[], int rightSide[], int array[], int size);
 
 //Searching Algorithms
 int LinearSearch(int array[], int size, int search, bool &done, int prev = 0);
-int BinarySearch(int array[], int size, int search, bool &done);
+int BinarySearch(int array[], int size, int search, bool &done, int prev = 0);
 int InterpolationSearch(int array[], int size, int search, bool &done);
 int JumpSearch(int array[], int size, int search, bool &done);
+int ExponentialSearch(int array[], int size, int search, bool &done);
+int FibonacciSearch(int array[], int size, int search, bool &done);
 
 //UI and outputs
 void SortResult(int array[], int size);
@@ -22,6 +24,7 @@ void SearchResult(int search);
 void isFound(bool done);
 int SearchPrompt(int search);
 void SyntaxError();
+int Min(int left, int right);
 
 int main(){
 	int array[10] = {1,9,2,8,3,7,4,6,10,5};
@@ -63,6 +66,8 @@ int main(){
 	cout << "2. Binary Search\n";
 	cout << "3. Interpolation Search\n";
 	cout << "4. Jump Search\n";
+	cout << "5. Exponential Search\n";
+	cout << "6. Fibonacci Search\n";
 	cout << "Your Answer: ";
 	cin >> choice;
 	cout << endl;
@@ -85,6 +90,16 @@ int main(){
 			case 4:
 				search = SearchPrompt(search);
 				result = JumpSearch(array,size,search,done);
+				isFound(done);
+				break; 
+			case 5:
+				search = SearchPrompt(search);
+				result = ExponentialSearch(array,size,search,done);
+				isFound(done);
+				break; 
+			case 6:
+				search = SearchPrompt(search);
+				result = FibonacciSearch(array,size,search,done);
 				isFound(done);
 				break; 
 			default: SyntaxError();
@@ -202,15 +217,14 @@ void Merge(int leftSide[], int rightSide[], int array[], int size){
 int LinearSearch(int array[], int size, int search, bool &done, int prev){
 	for(int i = prev; i < size; i++){
 		if(array[i] == search){
-			search = i; // returns the search index
 			done = true;
-			return search;	
+			return i;// returns the search index
 		}
 	}
 	done = false;
 }
 
-int BinarySearch(int array[], int size, int search, bool &done){
+int BinarySearch(int array[], int size, int search, bool &done, int prev){
 	int low, middle;
 	
 	while(low <= size){
@@ -220,9 +234,8 @@ int BinarySearch(int array[], int size, int search, bool &done){
 		}else if(search > array[middle]){
 			low = middle + 1;
 		}else{
-			search = middle; // returns the search index
 			done = true;
-			return search;	
+			return middle;// returns the search index
 		}
 	}
 	done = false;
@@ -237,9 +250,8 @@ int InterpolationSearch(int array[],int size, int search, bool &done){
 		middle = low + (size - low) * (search - array[low] / array[size] - array[low]);
 		
 		if(array[middle] == search){
-			search = middle; // returns the search index
 			done = true;
-			return search;
+			return middle;// returns the search index
 		}else if(array[middle] < search){
 			low = middle;
 		}else{
@@ -255,7 +267,6 @@ int JumpSearch(int array[], int size, int search, bool &done){
 	int prev, next;
 	
 	while(search <= array[size] && prev < size){
-		cout << prev;
 		if(array[next] >= search){
 			break;
 		}else{
@@ -269,6 +280,66 @@ int JumpSearch(int array[], int size, int search, bool &done){
 		return search;
 	}
 	
+	done = false;
+}
+
+int ExponentialSearch(int array[], int size, int search, bool &done){
+	int prev,next = 1;
+	
+	if(array[next - 1] == search){
+		done = true;
+		return next + 1;// returns the search index
+	}
+	
+	while(search <= array[size] && prev < size){
+		if(array[next] >= search){
+			break;
+		}else{
+			prev = next;
+			next += next;
+		}
+	}
+	//BinarySearch
+	while(search <= array[size]){
+		search = BinarySearch(array,next,search,done,prev);
+		return search;
+	}
+	
+	done = false;
+}
+
+
+int FibonacciSearch(int array[], int size, int search, bool &done){
+	int offset = -1;
+	int fib2 = 0;
+	int fib1 = 1;
+	int fib = fib2 + fib1;
+	// finds the limit based on size
+	while(fib < size){
+		fib2 = fib1;
+		fib1 = fib;
+		fib = fib2 + fib1;
+	}
+	while(fib > 1){
+		int i = Min(offset + fib2, size -1);
+		if(array[i] < search){
+			fib = fib1;
+			fib1 = fib2;
+			fib2 = fib - fib1;
+			offset = i;
+		}else if(array[i] > search){
+			fib = fib2;
+			fib1 = fib1 - fib2;
+			fib2 = fib - fib1;
+		}else{
+			done = true;
+			return i;
+		}
+	}	
+	if (fib1 && array[offset + 1] == search){
+      done = true;
+	  return offset + 1;
+	}
 	done = false;
 }
 
@@ -294,7 +365,6 @@ void isFound(bool done){
 int SearchPrompt(int search){
 	cout << "Enter Number you want to find: ";
 	cin >> search;
-	
 	return search;
 }
 
@@ -303,3 +373,11 @@ void SyntaxError(){
 	cin.clear();
 	fflush(stdin);
 };
+
+int Min(int left, int right){
+	if(left < right){
+		return left;
+	}else{
+		return right;
+	}
+}
