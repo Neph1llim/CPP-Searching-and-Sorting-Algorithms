@@ -11,11 +11,11 @@ I'm done creating some Sorting Algorithms, which include:
 
 ---
 
-I' done creating some Searching Algorithms, which include:
+I'm done creating some Searching Algorithms, which include:
   1. Linear Search
   2. Binary Search
   3. Interpolation Search
-  4. Jumps Search
+  4. Jump Search
   5. Exponential Search
   6. Fibonacci Search
 
